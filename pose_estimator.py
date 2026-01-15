@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 from scipy.spatial.transform import Rotation as SciRot
 import sys
+import os
 
 
 # ---------------------------------------------------------
@@ -82,6 +83,8 @@ def main(img1_path, img2_path):
 
     if img1 is None or img2 is None:
         print("Error: Could not load images.")
+        print(f"Checked path 1: {os.path.abspath(img1_path)}")
+        print(f"Checked path 2: {os.path.abspath(img2_path)}")
         return
 
     vo = VisualOdometry(K)
@@ -117,8 +120,8 @@ def main(img1_path, img2_path):
 
 if __name__ == "__main__":
     # Hardcoded paths (raw strings)
-    img1_path = r"archive (1)/Images/Images/132050002_0000_00_0000_P00_03.jpg"
-    img2_path = r"archive (1)/Images/Images/132050003_0000_00_0000_P00_03.jpg"
+    # img1_path = r"archive (1)/Images/Images/132050002_0000_00_0000_P00_03.jpg"
+    # img2_path = r"archive (1)/Images/Images/132050003_0000_00_0000_P00_03.jpg"
+    
 
     main(img1_path, img2_path)
-
