@@ -168,6 +168,62 @@ def main(video_filename: str):
     run_vo_on_frames_folder(out_folder)
 
 
+def run_vo_on_two_frames(img1_path: str, img2_path: str):
+    img1 = cv2.imread(img1_path, cv2.IMREAD_GRAYSCALE)
+    img2 = cv2.imread(img2_path, cv2.IMREAD_GRAYSCALE)
+
+    if img1 is None or img2 is None:
+        raise RuntimeError("Could not load one of the images")
+
+    h, w = img1.shape[:2]
+    K = build_K_from_frame_size(w, h)
+    vo = VisualOdometry(K)
+
+    kp1, des1 = vo.extract_features(img1)
+    kp2, des2 = vo.extract_features(img2)
+
+    if des1 is None or des2 is None:
+        raise RuntimeError("No descriptors found in one of the frames")
+
+    matches = vo.match_features(des1, des2)
+
+    if len(matches) < 15:
+        raise RuntimeError(f"Too few matches: {len(matches)}")
+
+    pts1, pts2 = vo.get_matched_points(kp1, kp2, matches, max_matches=400)
+
+    R, t = vo.estimate_pose(pts1, pts2)
+    rx, ry, rz = vo.rotation_to_euler(R)
+    tx, ty, tz = t.flatten()
+
+    print("\n============= CAMERA MOTION (6 DoF) =============")
+    print(f"Frame1: {img1_path}")
+    print(f"Frame2: {img2_path}")
+    print("\nTranslation (unscaled direction):")
+    print(f"  tx = {tx:.4f},  ty = {ty:.4f},  tz = {tz:.4f}")
+
+    print("\nRotation (degrees):")
+    print(f"  rx = {rx:.2f}°,  ry = {ry:.2f}°,  rz = {rz:.2f}°")
+    print("=================================================\n")
+
+
 if __name__ == "__main__":
-    # Default: Paris.mp4
-    main("Paris.mp4")
+    # Example for a video:
+    # main("Paris.mp4")
+    # main("Cinematic.mp4")
+
+
+
+    # Example for two frames:
+
+    img1_path = r"archive (1)/Images/Images/132050764_0000_00_0000_P00_01.jpg"
+    img2_path = r"archive (1)/Images/Images/132050765_0000_00_0000_P00_01.jpg"
+
+    # img1_path = r"Paris/frame_000200.jpg"
+    # img2_path = r"Paris/frame_000380.jpg"
+
+    # img1_path = r"Cinematic/frame_000200.jpg"
+    # img2_path = r"Cinematic/frame_000300.jpg"
+
+    run_vo_on_two_frames(img1_path, img2_path)
+    
