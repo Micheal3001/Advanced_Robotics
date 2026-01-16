@@ -122,6 +122,9 @@ if __name__ == "__main__":
     # Hardcoded paths (raw strings)
     # img1_path = r"archive (1)/Images/Images/132050002_0000_00_0000_P00_03.jpg"
     # img2_path = r"archive (1)/Images/Images/132050003_0000_00_0000_P00_03.jpg"
-    
+
+    img1_path = r"Paris/frame_000350.jpg"
+    img2_path = r"Paris/frame_000380.jpg"
+
 
     main(img1_path, img2_path)
