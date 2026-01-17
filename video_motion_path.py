@@ -199,6 +199,14 @@ def plot_motion_and_rotation(traj_vo_m, traj_aruco_m, euler_deg, title, save_pat
 
     ax1.plot(vo[:, 0], vo[:, 2], -vo[:, 1], label="SIFT (Smoothed, cm)", linewidth=2)
 
+    # ---- START / END markers (VO) ----
+    x0, z0, y0 = vo[0, 0], vo[0, 2], -vo[0, 1]
+    x1, z1, y1 = vo[-1, 0], vo[-1, 2], -vo[-1, 1]
+
+    ax1.scatter(x0, z0, y0, c="green", s=80, marker="o", label="START")
+    ax1.scatter(x1, z1, y1, c="red",   s=80, marker="o", label="END")
+
+
     if traj_aruco_m is not None and len(traj_aruco_m) > 2:
         ar = traj_aruco_m * 100.0
         ax1.plot(ar[:, 0], ar[:, 2], -ar[:, 1], "--", label="ArUco (Ground Truth, cm)", linewidth=2)
