@@ -24,32 +24,12 @@ def build_K_from_frame_size(w, h, fx=None):
     fy = fx
     cx = w / 2.0
     cy = h / 2.0
-    return np.array([[fx, 0, cx],
-                     [0, fy, cy],
-                     [0,  0,  1]], dtype=np.float64)
-
-
-# ============================
-# Rotation matrix -> Euler XYZ (deg)
-# ============================
-def rotmat_to_euler_xyz_deg(R):
-    """
-    Returns Euler angles (rx, ry, rz) in degrees using XYZ convention.
-    rx = roll, ry = pitch, rz = yaw
-    """
-    sy = np.sqrt(R[0, 0] * R[0, 0] + R[1, 0] * R[1, 0])
-    singular = sy < 1e-6
-
-    if not singular:
-        rx = np.arctan2(R[2, 1], R[2, 2])
-        ry = np.arctan2(-R[2, 0], sy)
-        rz = np.arctan2(R[1, 0], R[0, 0])
-    else:
-        rx = np.arctan2(-R[1, 2], R[1, 1])
-        ry = np.arctan2(-R[2, 0], sy)
-        rz = 0.0
-
-    return np.degrees([rx, ry, rz])
+    return np.array(
+        [[fx, 0, cx],
+         [0, fy, cy],
+         [0,  0,  1]],
+        dtype=np.float64
+    )
 
 
 # ============================
@@ -60,7 +40,7 @@ class SIFTMatcher:
         self.sift = cv2.SIFT_create(nfeatures=nfeatures)
 
         # FLANN matcher for SIFT
-        index_params = dict(algorithm=1, trees=5)   # KDTree
+        index_params = dict(algorithm=1, trees=5)  # KDTree
         search_params = dict(checks=80)
         self.flann = cv2.FlannBasedMatcher(index_params, search_params)
 
@@ -102,7 +82,7 @@ def estimate_relative_pose(img1_gray, img2_gray, K, dist, sift: SIFTMatcher,
                            min_matches=50, min_inliers=25, ransac_thresh=1.0):
     """
     Returns:
-      R (3x3), t (3x1), inliers_count, matches_count
+      R (3x3), t (3x1)
     """
 
     kp1, des1 = sift.extract(img1_gray)
@@ -130,7 +110,6 @@ def estimate_relative_pose(img1_gray, img2_gray, K, dist, sift: SIFTMatcher,
 
     mask = mask.ravel().astype(bool)
     inliers = int(mask.sum())
-
     if inliers < min_inliers:
         raise RuntimeError(f"Too few inliers: {inliers} (need >= {min_inliers})")
 
@@ -139,7 +118,7 @@ def estimate_relative_pose(img1_gray, img2_gray, K, dist, sift: SIFTMatcher,
 
     _, R, t, _ = cv2.recoverPose(E, pts1_in, pts2_in, K)
 
-    return R, t, inliers, len(matches)
+    return R, t
 
 
 # ============================
@@ -147,14 +126,14 @@ def estimate_relative_pose(img1_gray, img2_gray, K, dist, sift: SIFTMatcher,
 # ============================
 def main():
     parser = argparse.ArgumentParser(
-        description="Estimate 6DoF relative pose between two images using SIFT + Essential Matrix."
+        description="Estimate relative pose (R,t) between 2 images using SIFT + Essential Matrix."
     )
 
     parser.add_argument("--img1", required=True, help="Path to first image")
     parser.add_argument("--img2", required=True, help="Path to second image")
-    parser.add_argument("--calib", default=None, help="Optional calibration file .npz (must contain K, dist)")
+    parser.add_argument("--calib", default=None, help="Optional calibration .npz (contains K, dist)")
 
-    # Optional tuning (good defaults)
+    # Optional tuning
     parser.add_argument("--min_matches", type=int, default=50)
     parser.add_argument("--min_inliers", type=int, default=25)
     parser.add_argument("--ransac_thresh", type=float, default=1.0)
@@ -180,19 +159,14 @@ def main():
     # Load calibration or estimate K
     if args.calib:
         K, dist = load_calibration(args.calib)
-        print("✅ Using calibration from:", args.calib)
     else:
         K = build_K_from_frame_size(w, h)
         dist = np.zeros((1, 5), dtype=np.float64)
-        print("⚠️ No calibration provided -> using estimated K")
-
-    print("\nK =\n", K)
-    print("\ndist =\n", dist)
 
     sift = SIFTMatcher(nfeatures=6000)
 
     # Estimate pose
-    R, t, inliers, matches_count = estimate_relative_pose(
+    R, t = estimate_relative_pose(
         img1, img2,
         K, dist,
         sift,
@@ -201,26 +175,11 @@ def main():
         ransac_thresh=args.ransac_thresh
     )
 
-    rx, ry, rz = rotmat_to_euler_xyz_deg(R)
-    tx, ty, tz = t.flatten()
-
-    # Output
-    print("\n================= RESULT =================")
-    print("Matches:", matches_count)
-    print("Inliers:", inliers)
-
-    print("\nRotation Matrix R:")
+    # ✅ Required output only:
+    print("Rotation Matrix R:")
     print(R)
-
-    print("\nTranslation Vector t (direction only, scale unknown):")
+    print("\nTranslation Vector t:")
     print(t)
-
-    print("\nEuler angles (deg):")
-    print(f"  rx={rx:.2f}, ry={ry:.2f}, rz={rz:.2f}")
-
-    print("\nTranslation (unit direction):")
-    print(f"  tx={tx:.4f}, ty={ty:.4f}, tz={tz:.4f}")
-    print("==========================================\n")
 
 
 if __name__ == "__main__":
