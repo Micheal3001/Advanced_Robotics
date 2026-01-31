@@ -1,24 +1,27 @@
 # Ignore everything by default
 *
 
-# But keep folders (so we can unignore specific files inside)
+# Keep directories so we can unignore files inside them if needed
 !*/
 
-# ---- Allow-list (keep only these files) ----
+# ---- KEEP ONLY THESE FILES ----
 !.gitignore
+
 !pose_estimator.py
+!pose_estimator_2frames.py
+
 !trajectory_from_video.py
 !video_motion_path.py
 !run_vo_on_video.py
 !sift_aruco_path_updated.py
 !calibrate_charuco_from_video.py
-!pose_estimator_2frames.py
 
+!calibration_filtered.npz
 !frame_000000.jpg
 !frame_000010.jpg
-!calibration_filtered.npz
+
 !run.txt
 !report.pdf
 
-# (Optional) keep requirements.txt if you want the project runnable
-# !requirements.txt
+# Ignore Word temp files
+~$*.docx
