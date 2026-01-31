@@ -1,3 +1,0 @@
-opencv-contrib-python
-opencv-contrib-python numpy scipy matplotlib
-opencv-contrib-python numpy matplotlib

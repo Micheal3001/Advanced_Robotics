@@ -1,11 +1,24 @@
-venv/
+# Ignore everything by default
+*
 
+# But keep folders (so we can unignore specific files inside)
+!*/
 
-trajectory.png
-*.mp4
-__pycache__/
-*.pyc
-archive (1)/Images/Images
-Test scripts/
-Paris/
-Cinematic/
+# ---- Allow-list (keep only these files) ----
+!.gitignore
+!pose_estimator.py
+!trajectory_from_video.py
+!video_motion_path.py
+!run_vo_on_video.py
+!sift_aruco_path_updated.py
+!calibrate_charuco_from_video.py
+!pose_estimator_2frames.py
+
+!frame_000000.jpg
+!frame_000010.jpg
+!calibration_filtered.npz
+!run.txt
+!report.pdf
+
+# (Optional) keep requirements.txt if you want the project runnable
+# !requirements.txt
