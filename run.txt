@@ -1,22 +1,5 @@
-trajectory_from_video:
-regular run:
-python trajectory_from_video.py --video "YourVideo.mp4" --prefer_sift --step 5 --csv "traj_YourVideo.csv" --plot "traj_YourVideo.png"
-
-ArUco scale run:
-python trajectory_from_video.py --video "YourVideo.mp4" --prefer_sift --step 5 --use_aruco --marker_size_cm 2.5
-
-examples:
-python trajectory_from_video.py --video "yousef_aruco.mp4" --prefer_sift --step 5 --use_aruco --marker_size_cm 2.5
-
-----------------------------------------------------------------------------------------
-sift_aruco_path.py:
-python sift_aruco_path.py --video "yousef_aruco.mp4" --step 3 --marker_size_cm 2.5 --smooth 9
-----------------------------------------------------------------------------------------
-video_motion_path.py
-
 With calibration:
-python video_motion_path.py --video YourVideo.mp4 --calib calibration_filtered.npz --step 1 --smooth 9
+python pose_estimator_2frames.py --img1 "img1.jpg" --img2 "img2.jpg" --calib “calibration.npz”
 
-With ArUco scaling + ground truth:
-python video_motion_path.py --video Loai_aruco.mp4 --calib calibration_filtered.npz --use_aruco --marker_size_cm 2.5 --step 1
-
+Without calibration:
+python pose_estimator_2frames.py --img1 "img1.jpg" --img2 "img2.jpg"
