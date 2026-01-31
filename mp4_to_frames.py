@@ -258,10 +258,15 @@ if __name__ == "__main__":
     # ✅ Example for a video:
     # main("Paris.mp4")
     # main("Cinematic.mp4")
+    main("Videos/r1.mp4")
+    main("Videos/r2.mp4")
+    main("Videos/Loai_aruco.mp4")
+    main("Videos/yousef_aruco.mp4")
+
 
     # ✅ Example for two frames:
-    img1_path = r"archive (1)/Images/Images/132050764_0000_00_0000_P00_01.jpg"
-    img2_path = r"archive (1)/Images/Images/132050765_0000_00_0000_P00_01.jpg"
+    # img1_path = r"archive (1)/Images/Images/132050764_0000_00_0000_P00_01.jpg"
+    # img2_path = r"archive (1)/Images/Images/132050765_0000_00_0000_P00_01.jpg"
 
     # img1_path = r"Paris/frame_000200.jpg"
     # img2_path = r"Paris/frame_000380.jpg"
@@ -269,4 +274,4 @@ if __name__ == "__main__":
     # img1_path = r"Cinematic/frame_000200.jpg"
     # img2_path = r"Cinematic/frame_000300.jpg"
 
-    run_vo_on_two_frames(img1_path, img2_path)
+    # run_vo_on_two_frames(img1_path, img2_path)
