@@ -1,15 +1,14 @@
-# Ignore everything by default
+# ignore everything
 *
 
-# Keep directories so we can unignore files inside them if needed
+# keep folders so unignore rules work
 !*/
 
-# ---- KEEP ONLY THESE FILES ----
+# keep only what we submit
 !.gitignore
 
 !pose_estimator.py
 !pose_estimator_2frames.py
-
 !trajectory_from_video.py
 !video_motion_path.py
 !run_vo_on_video.py
@@ -23,5 +22,5 @@
 !run.txt
 !report.pdf
 
-# Ignore Word temp files
+# ignore office temp
 ~$*.docx
