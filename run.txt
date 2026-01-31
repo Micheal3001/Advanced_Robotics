@@ -1,0 +1,5 @@
+With calibration:
+python pose_estimator_2frames.py --img1 "img1.jpg" --img2 "img2.jpg" --calib “calibration.npz”
+
+Without calibration:
+python pose_estimator_2frames.py --img1 "img1.jpg" --img2 "img2.jpg"

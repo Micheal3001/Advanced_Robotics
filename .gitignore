@@ -1,1 +1,26 @@
-venv/
+# ignore everything
+*
+
+# keep folders so unignore rules work
+!*/
+
+# keep only what we submit
+!.gitignore
+
+!pose_estimator.py
+!pose_estimator_2frames.py
+!trajectory_from_video.py
+!video_motion_path.py
+!run_vo_on_video.py
+!sift_aruco_path_updated.py
+!calibrate_charuco_from_video.py
+
+!calibration_filtered.npz
+!frame_000000.jpg
+!frame_000010.jpg
+
+!run.txt
+!report.pdf
+
+# ignore office temp
+~$*.docx
